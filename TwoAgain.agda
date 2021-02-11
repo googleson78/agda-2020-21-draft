@@ -15,6 +15,8 @@ _+N_ : Nat -> Nat -> Nat
 zero +N m = m
 suc n +N m = suc (n +N m)
 
+infixr 15 _+N_
+
 NatEq : Nat -> Nat -> Set
 NatEq zero zero = One
 NatEq zero (suc m) = Zero
@@ -81,6 +83,8 @@ data _==_ {A : Set} (x : A) : A -> Set where
 
 {-# BUILTIN EQUALITY _==_ #-}
 
+infix 5 _==_
+
 _ : suc (suc zero) == suc (suc zero)
 _ = refl
 
@@ -105,6 +109,8 @@ data _<=_ : Nat -> Nat -> Set where
 <=-trans ozero q = ozero
 <=-trans (osuc p) (osuc q) = osuc (<=-trans p q)
 
+infix 6 _<=_
+
 _<='_ : (n m : Nat) -> Set
 zero <=' m = One
 suc n <=' zero = Zero
@@ -119,3 +125,65 @@ suc n <=' suc m = n <=' m
 -- union : NatSet -> NatSet -> NatSet
 -- difference : NatSet -> NatSet -> NatSet
 -- intersection x (intersection y z) == intersection (intersection x y) z
+
+==-trans : {A : Set} {x y z : A} -> x == y -> y == z -> x == z
+==-trans = {!!}
+
+ap : {A B : Set} {x y : A} -> (f : A -> B) -> x == y -> f x == f y
+ap = {!!}
+
++N-right-zero : (n : Nat) -> n +N 0 == n
++N-right-zero = {!!}
+
++N-right-suc : (n m : Nat) -> n +N suc m == suc (n +N m)
++N-right-suc = {!!}
+
+-- use +N-right-zero and +N-right-suc
++N-commut : (n m : Nat) -> n +N m == m +N m
++N-commut = {!!}
+
+<=-refl : {n : Nat} -> n <= n
+<=-refl = {!!}
+
+<=-antisym : {n m : Nat} -> n <= m -> m <= n -> n == m
+<=-antisym = {!!}
+
+<=-mono-left-+ : {n m : Nat} (k : Nat) -> n <= m -> k +N n <= k +N m
+<=-mono-left-+ = {!!}
+
+-- you might need a lemma here
+<=-mono-right-+ : {n m : Nat} (k : Nat) -> n <= m -> n +N k <= m +N k
+<=-mono-right-+ = {!!}
+
+_+L_ : {A : Set} -> List A -> List A -> List A
+xs +L ys = {!!}
+
+infixr 10 _+L_
+
++L-assoc : {A : Set} (xs ys zs : List A) -> (xs +L ys) +L zs == xs +L ys +L zs
++L-assoc xs ys zs = {!!}
+
++L-right-id : {A : Set} (xs : List A) -> xs +L Nil == xs
++L-right-id = {!!}
+
+map : {A B : Set} -> (A -> B) -> List A -> List B
+map f xs = {!!}
+
+id : {A : Set} -> A -> A
+id x = x
+
+map-id-is-id : {A : Set} -> (xs : List A) -> map id xs == xs
+map-id-is-id = {!!}
+
+-- right-to-left composition
+_<<_ : {A B C : Set} -> (B -> C) -> (A -> B) -> A -> C
+(f << g) x = f (g x)
+
+-- mapping a composition is the same as composing mappings
+map-compose : {A B C : Set} (f : B -> C) (g : A -> B) (xs : List A) -> map (f << g) xs == (map f << map g) xs
+map-compose = {!!}
+-- this + map-id-is-id proves that Lists are a functor
+
+-- mapping after appending is the same as first mapping and then appending
+map-distrib-+L : {A B : Set} (f : A -> B) (xs ys : List A) -> map f (xs +L ys) == map f xs +L map f ys
+map-distrib-+L = {!!}
