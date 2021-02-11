@@ -142,7 +142,7 @@ ap = {!!}
 +N-commut : (n m : Nat) -> n +N m == m +N m
 +N-commut = {!!}
 
-<=-refl : {n : Nat} -> n <= n
+<=-refl : (n : Nat) -> n <= n
 <=-refl = {!!}
 
 <=-antisym : {n m : Nat} -> n <= m -> m <= n -> n == m
