@@ -127,33 +127,48 @@ suc n <=' suc m = n <=' m
 -- intersection x (intersection y z) == intersection (intersection x y) z
 
 ==-trans : {A : Set} {x y z : A} -> x == y -> y == z -> x == z
-==-trans = {!!}
+==-trans refl refl = refl
 
 ap : {A B : Set} {x y : A} -> (f : A -> B) -> x == y -> f x == f y
-ap = {!!}
+ap _ refl = refl
 
 +N-right-zero : (n : Nat) -> n +N 0 == n
-+N-right-zero = {!!}
++N-right-zero zero = refl
++N-right-zero (suc n) = ap suc (+N-right-zero n)
 
 +N-right-suc : (n m : Nat) -> n +N suc m == suc (n +N m)
-+N-right-suc = {!!}
++N-right-suc zero m = refl
++N-right-suc (suc n) m = ap suc (+N-right-suc n m)
 
 -- use +N-right-zero and +N-right-suc
-+N-commut : (n m : Nat) -> n +N m == m +N m
-+N-commut = {!!}
++N-commut : (n m : Nat) -> n +N m == m +N n
++N-commut n zero = +N-right-zero n
++N-commut n (suc m) = {! +N-commut n m !} -- not sure how to do that
 
 <=-refl : (n : Nat) -> n <= n
-<=-refl = {!!}
+<=-refl zero = ozero
+<=-refl (suc n) = osuc (<=-refl n)
 
 <=-antisym : {n m : Nat} -> n <= m -> m <= n -> n == m
-<=-antisym = {!!}
+<=-antisym ozero ozero = refl
+<=-antisym (osuc a) (osuc b) = ap suc (<=-antisym a b)
 
 <=-mono-left-+ : {n m : Nat} (k : Nat) -> n <= m -> k +N n <= k +N m
-<=-mono-left-+ = {!!}
+<=-mono-left-+ zero x = x
+<=-mono-left-+ (suc k) x = osuc(<=-mono-left-+ k x)
+
+<=_+zero : { n m : Nat } -> n <= m -> n +N zero <= m +N zero
+<=_+zero ozero = ozero
+<=_+zero (osuc x) =  osuc (<=_+zero x)
+
+<=_+suc : { n m k : Nat } -> n +N k <= m +N k -> n +N (suc k) <= m +N (suc k)
+<=_+suc {n} {m} {zero} x = {! osuc x  !} -- hmm
+<=_+suc {n} {m} {suc k} x = {!   !}
 
 -- you might need a lemma here
 <=-mono-right-+ : {n m : Nat} (k : Nat) -> n <= m -> n +N k <= m +N k
-<=-mono-right-+ = {!!}
+<=-mono-right-+ zero x = <= x +zero
+<=-mono-right-+ (suc k) x = {! <=-mono-right-+ k x  !}
 
 _+L_ : {A : Set} -> List A -> List A -> List A
 xs +L ys = {!!}
