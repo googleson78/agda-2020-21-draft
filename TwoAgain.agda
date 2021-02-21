@@ -143,7 +143,7 @@ ap _ refl = refl
 -- use +N-right-zero and +N-right-suc
 +N-commut : (n m : Nat) -> n +N m == m +N n
 +N-commut n zero = +N-right-zero n
-+N-commut n (suc m) = {! ap (+N-commut n m) (+N-right-suc n m) !} -- not sure how to do that
++N-commut n (suc m) = ==-trans (+N-right-suc n m) (ap suc (+N-commut n m))
 
 <=-refl : (n : Nat) -> n <= n
 <=-refl zero = ozero
@@ -161,14 +161,17 @@ ap _ refl = refl
 <=_+zero ozero = ozero
 <=_+zero (osuc x) =  osuc (<=_+zero x)
 
-<=_+suc : { n m k : Nat } -> n +N k <= m +N k -> n +N (suc k) <= m +N (suc k)
-<=_+suc {n} {m} {zero} x = {! osuc x  !} -- hmm
-<=_+suc {n} {m} {suc k} x = {!   !}
+-- <=-right-suc-+ : {n m k : Nat} -> n <= suc (m +N k) -> n <= m +N (suc k)
+-- <=-right-suc-+ {m} {k = zero} x = {!  <=-trans x (<=_+zero ?) !}
+-- <=-right-suc-+ {k = suc k} x = {!   !}
+
+<=-suc-k-+ : { n m k : Nat } -> n +N k <= m +N k -> n +N (suc k) <= m +N (suc k)
+<=-suc-k-+ = {!!} -- not sure
 
 -- you might need a lemma here
 <=-mono-right-+ : {n m : Nat} (k : Nat) -> n <= m -> n +N k <= m +N k
 <=-mono-right-+ zero x = <= x +zero
-<=-mono-right-+ (suc k) x = {! <=-mono-right-+ k x  !}
+<=-mono-right-+ (suc k) x = <=-suc-k-+ (<=-mono-right-+ k x)
 
 _+L_ : {A : Set} -> List A -> List A -> List A
 _+L_ {A} Nil ys = ys
