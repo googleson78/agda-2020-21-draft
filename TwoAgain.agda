@@ -143,7 +143,7 @@ ap _ refl = refl
 -- use +N-right-zero and +N-right-suc
 +N-commut : (n m : Nat) -> n +N m == m +N n
 +N-commut n zero = +N-right-zero n
-+N-commut n (suc m) = {! +N-commut n m !} -- not sure how to do that
++N-commut n (suc m) = {! ap (+N-commut n m) (+N-right-suc n m) !} -- not sure how to do that
 
 <=-refl : (n : Nat) -> n <= n
 <=-refl zero = ozero
@@ -171,24 +171,29 @@ ap _ refl = refl
 <=-mono-right-+ (suc k) x = {! <=-mono-right-+ k x  !}
 
 _+L_ : {A : Set} -> List A -> List A -> List A
-xs +L ys = {!!}
+_+L_ {A} Nil ys = ys
+_+L_ {A} (Cons x xs) ys = Cons x (xs +L ys)
 
 infixr 10 _+L_
 
 +L-assoc : {A : Set} (xs ys zs : List A) -> (xs +L ys) +L zs == xs +L ys +L zs
-+L-assoc xs ys zs = {!!}
++L-assoc {A} Nil ys zs = refl
++L-assoc {A} (Cons x xs) ys zs = ap (Cons x) (+L-assoc xs ys zs)
 
 +L-right-id : {A : Set} (xs : List A) -> xs +L Nil == xs
-+L-right-id = {!!}
++L-right-id Nil = refl
++L-right-id (Cons x xs) = ap (Cons x) (+L-right-id xs)
 
 map : {A B : Set} -> (A -> B) -> List A -> List B
-map f xs = {!!}
+map {A} {B} f Nil = Nil
+map {A} {B} f (Cons x xs) = Cons (f x) (map f xs)
 
 id : {A : Set} -> A -> A
 id x = x
 
 map-id-is-id : {A : Set} -> (xs : List A) -> map id xs == xs
-map-id-is-id = {!!}
+map-id-is-id Nil = refl
+map-id-is-id (Cons x xs) = ap (Cons x) (map-id-is-id xs)
 
 -- right-to-left composition
 _<<_ : {A B C : Set} -> (B -> C) -> (A -> B) -> A -> C
@@ -196,9 +201,11 @@ _<<_ : {A B C : Set} -> (B -> C) -> (A -> B) -> A -> C
 
 -- mapping a composition is the same as composing mappings
 map-compose : {A B C : Set} (f : B -> C) (g : A -> B) (xs : List A) -> map (f << g) xs == (map f << map g) xs
-map-compose = {!!}
+map-compose f g Nil = refl
+map-compose f g (Cons x xs) = ap (Cons ((f << g) x)) (map-compose f g xs)
 -- this + map-id-is-id proves that Lists are a functor
 
 -- mapping after appending is the same as first mapping and then appending
 map-distrib-+L : {A B : Set} (f : A -> B) (xs ys : List A) -> map f (xs +L ys) == map f xs +L map f ys
-map-distrib-+L = {!!}
+map-distrib-+L f Nil ys = refl
+map-distrib-+L f (Cons x xs) ys = ap (Cons (f x)) (map-distrib-+L f xs ys)
